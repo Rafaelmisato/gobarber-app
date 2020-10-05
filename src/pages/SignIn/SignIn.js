@@ -1,5 +1,16 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
+import Icon from 'react-native-vector-icons/Feather';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -21,20 +32,71 @@ const styles = StyleSheet.create({
     marginTop: 64,
     marginBottom: 24,
   },
+  forgotPassword: {
+    marginTop: 24,
+  },
+  forgotPasswordText: {
+    color: '#f4ede8',
+    fontSize: 16,
+    fontFamily: 'RobotoSlab-Regular',
+  },
+  createButton: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#312e38',
+    borderTopWidth: 1,
+    borderColor: '#232129',
+    paddingBottom: getBottomSpace(),
+    paddingTop: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  createButtonText: {
+    color: '#ff9000',
+    fontSize: 18,
+    fontFamily: 'RobotoSlab-Regular',
+    marginLeft: 16,
+  },
 });
 
 const SignIn = () => {
   return (
-    <View style={styles.container}>
-      <Image source={logoImg} />
+    <>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled
+      >
+        <ScrollView
+          keyboardShouldPersistTap="handled"
+          contentContainerStyle={{ flex: 1 }}
+        >
+          <View style={styles.container}>
+            <Image source={logoImg} />
 
-      <Text style={styles.title}>Faça seu login</Text>
+            <View>
+              <Text style={styles.title}>Faça seu login</Text>
+            </View>
 
-      <Input name="email" icon="mail" placeholder="E-mail" />
-      <Input name="password" icon="lock" placeholder="Senha" />
+            <Input name="email" icon="mail" placeholder="E-mail" />
+            <Input name="password" icon="lock" placeholder="Senha" />
 
-      <Button OnPress={() => {}}>Entrar</Button>
-    </View>
+            <Button OnPress={() => {}}>Entrar</Button>
+
+            <TouchableOpacity style={styles.forgotPassword} onPress={() => {}}>
+              <Text style={styles.forgotPasswordText}>Esqueci minha senha</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      <TouchableOpacity style={styles.createButton} onPress={() => {}}>
+        <Icon name="log-in" size={20} color="#ff9000" />
+        <Text style={styles.createButtonText}>Criar uma conta</Text>
+      </TouchableOpacity>
+    </>
   );
 };
 
