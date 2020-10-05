@@ -12,10 +12,10 @@ import {
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
 
-import Button from '../../components/Button';
-import Input from '../../components/Input';
+import Button from '../components/Button';
+import Input from '../components/Input';
 
-import logoImg from '../../assets/logo.png';
+import logoImg from '../assets/logo.png';
 
 const styles = StyleSheet.create({
   container: {
