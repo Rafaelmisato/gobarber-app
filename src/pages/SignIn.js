@@ -12,6 +12,8 @@ import {
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
 
+import { useNavigation } from '@react-navigation/native';
+
 import Button from '../components/Button';
 import Input from '../components/Input';
 
@@ -63,6 +65,7 @@ const styles = StyleSheet.create({
 });
 
 const SignIn = () => {
+  const navigation = useNavigation();
   return (
     <>
       <KeyboardAvoidingView
@@ -92,7 +95,12 @@ const SignIn = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <TouchableOpacity style={styles.createButton} onPress={() => {}}>
+      <TouchableOpacity
+        style={styles.createButton}
+        onPress={() => {
+          navigation.navigate('SignUp');
+        }}
+      >
         <Icon name="log-in" size={20} color="#ff9000" />
         <Text style={styles.createButtonText}>Criar uma conta</Text>
       </TouchableOpacity>

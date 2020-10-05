@@ -12,6 +12,8 @@ import {
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
 
+import { useNavigation } from '@react-navigation/native';
+
 import Button from '../components/Button';
 import Input from '../components/Input';
 
@@ -56,6 +58,8 @@ const styles = StyleSheet.create({
 });
 
 const SignUp = () => {
+  const navigation = useNavigation();
+
   return (
     <>
       <KeyboardAvoidingView
@@ -82,7 +86,12 @@ const SignUp = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <TouchableOpacity style={styles.BackToSignIn} onPress={() => {}}>
+      <TouchableOpacity
+        style={styles.BackToSignIn}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
         <Icon name="arrow-left" size={20} color="#fff" />
         <Text style={styles.BackToSignInText}>Voltar para login</Text>
       </TouchableOpacity>
