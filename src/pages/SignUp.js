@@ -16,6 +16,7 @@ import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import getValidationErrors from '../utils/getValidationErrors';
+import api from '../services/api';
 
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -97,6 +98,11 @@ const SignUp = () => {
           const errors = getValidationErrors(err);
 
           formRef.current.setErrors(errors);
+
+          Alert.alert(
+            'Erro no cadastro',
+            'Verifique os campos em vermelho. A senha deve conter no mínimo 6 dígitos.'
+          );
 
           return;
         }
