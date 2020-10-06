@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
-
+import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 
 import Button from '../components/Button';
@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
     fontFamily: 'RobotoSlab-Medium',
     marginTop: 64,
     marginBottom: 24,
+  },
+  form: {
+    alignSelf: 'stretch',
   },
   forgotPassword: {
     marginTop: 24,
@@ -66,6 +69,7 @@ const styles = StyleSheet.create({
 
 const SignIn = () => {
   const navigation = useNavigation();
+  function handleSignIn() {}
   return (
     <>
       <KeyboardAvoidingView
@@ -84,8 +88,10 @@ const SignIn = () => {
               <Text style={styles.title}>Faça seu login</Text>
             </View>
 
-            <Input name="email" icon="mail" placeholder="E-mail" />
-            <Input name="password" icon="lock" placeholder="Senha" />
+            <Form style={styles.form} onSubmit={handleSignIn}>
+              <Input name="email" icon="mail" placeholder="E-mail" />
+              <Input name="password" icon="lock" placeholder="Senha" />
+            </Form>
 
             <Button OnPress={() => {}}>Entrar</Button>
 

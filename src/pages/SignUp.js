@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
+import { Form } from '@unform/mobile';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -34,7 +35,9 @@ const styles = StyleSheet.create({
     marginTop: 64,
     marginBottom: 24,
   },
-
+  form: {
+    alignSelf: 'stretch',
+  },
   BackToSignIn: {
     position: 'absolute',
     left: 0,
@@ -78,9 +81,11 @@ const SignUp = () => {
               <Text style={styles.title}>Crie sua conta</Text>
             </View>
 
-            <Input name="name" icon="user" placeholder="Nome" />
-            <Input name="email" icon="mail" placeholder="E-mail" />
-            <Input name="password" icon="lock" placeholder="Senha" />
+            <Form style={styles.form}>
+              <Input name="name" icon="user" placeholder="Nome" />
+              <Input name="email" icon="mail" placeholder="E-mail" />
+              <Input name="password" icon="lock" placeholder="Senha" />
+            </Form>
 
             <Button OnPress={() => {}}>Cadastrar</Button>
           </View>
