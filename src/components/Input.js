@@ -1,6 +1,14 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useField } from '@unform/core';
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -36,23 +44,36 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 16,
   },
-  iconSelected: {
+  iconError: {
     marginRight: 16,
-    color: '#ff9000',
+    color: '#c53030',
   },
 });
 
-const Input = ({ name, icon, ...rest }) => {
-  // const inputElementRef = useRef(null);
-  const inputRef = useRef(null);
+const Input = ({ name, icon, ...rest }, ref) => {
+  const inputElementRef = useRef(null);
+  const inputValueRef = useRef({});
+
+  const { fieldName, defaultValue = '', error, registerField } = useField(name);
 
   const [isFocused, setIsFocused] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    focus() {
+      inputElementRef.current.focus();
+    },
+  }));
+
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputValueRef.current,
+      path: 'value',
+    });
+  }, [fieldName, registerField]);
 
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
-
-    setIsFilled(!!inputRef.current?.value);
   }, []);
 
   const handleInputFocus = useCallback(() => {
@@ -64,24 +85,27 @@ const Input = ({ name, icon, ...rest }) => {
       style={isFocused ? styles.inputContainerSelected : styles.inputContainer}
     >
       <Icon
-        style={isFilled ? styles.iconSelected : styles.icon}
+        style={error ? styles.iconError : styles.icon}
         name={icon}
         size={20}
         color={isFocused ? '#ff9000' : '#666360'}
       />
 
       <TextInput
-        // ref={inputElementRef}
         style={styles.input}
         keyboardAppearance="dark"
         placeholderTextColor="#666360"
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
-        ref={inputRef}
+        ref={inputValueRef}
+        defaultValue={defaultValue}
+        onChangeText={(value) => {
+          inputValueRef.current.value = value;
+        }}
         {...rest}
       />
     </View>
   );
 };
 
-export default Input;
+export default forwardRef(Input);
