@@ -140,6 +140,7 @@ const SignUp = () => {
                 icon="user"
                 placeholder="Nome"
                 returnKeyType="next"
+                blurOnSubmit={false}
                 onSubmitEditing={() => {
                   emailInputRef.current?.focus();
                 }}
@@ -152,6 +153,7 @@ const SignUp = () => {
                 name="email"
                 icon="mail"
                 placeholder="E-mail"
+                blurOnSubmit={false}
                 returnKeyType="next"
                 onSubmitEditing={() => {
                   passInputRef.current?.focus();

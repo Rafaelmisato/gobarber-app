@@ -145,6 +145,7 @@ const SignIn = () => {
                 icon="mail"
                 placeholder="E-mail"
                 returnKeyType="next"
+                blurOnSubmit={false}
                 onSubmitEditing={() => {
                   passwordInputRef.current?.focus();
                 }}

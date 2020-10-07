@@ -57,6 +57,7 @@ const Input = ({ name, icon, ...rest }, ref) => {
   const { fieldName, defaultValue = '', error, registerField } = useField(name);
 
   const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -74,6 +75,8 @@ const Input = ({ name, icon, ...rest }, ref) => {
 
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
+
+    setIsFilled(!!inputValueRef.current.value);
   }, []);
 
   const handleInputFocus = useCallback(() => {
@@ -88,7 +91,7 @@ const Input = ({ name, icon, ...rest }, ref) => {
         style={error ? styles.iconError : styles.icon}
         name={icon}
         size={20}
-        color={isFocused ? '#ff9000' : '#666360'}
+        color={isFilled ? '#ff9000' : '#666360'}
       />
 
       <TextInput
@@ -97,7 +100,7 @@ const Input = ({ name, icon, ...rest }, ref) => {
         placeholderTextColor="#666360"
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
-        ref={inputValueRef}
+        ref={inputElementRef}
         defaultValue={defaultValue}
         onChangeText={(value) => {
           inputValueRef.current.value = value;

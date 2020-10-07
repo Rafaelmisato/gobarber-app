@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import AppProvider from './hooks/index';
 
-import Routes from './routes/routes';
+import Routes from './routes/index';
 
 const App = () => {
   return (
