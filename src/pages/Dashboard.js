@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingLeft: 24,
     paddingRight: 24,
-    paddingBottom: 16,
   },
   providersListTitle: {
     fontSize: 24,

@@ -1,7 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
+import { format } from 'date-fns';
 import {
   TouchableOpacity,
   FlatList,
@@ -87,13 +95,79 @@ const CreateAppointment = () => {
       color: '#232129',
     },
     calendar: {},
-    calendarTitle: {},
+    title: {
+      fontFamily: 'RobotoSlab-Medium',
+      color: '#f4ede8',
+      fontSize: 24,
+      margin: 24,
+      marginTop: 0,
+    },
+    openDatePickerButton: {
+      height: 46,
+      backgroundColor: '#ff9000',
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 24,
+      marginRight: 24,
+      marginBottom: 24,
+    },
+    openDatePickerText: {
+      fontFamily: 'RobotoSlab-Medium',
+      fontSize: 16,
+      color: '#232129',
+    },
+    schedule: {
+      paddingTop: 24,
+      paddingBottom: 16,
+    },
+    section: {
+      marginBottom: 24,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      color: '#999591',
+      fontFamily: 'RobotoSlab-Regular',
+      marginLeft: 24,
+      marginBottom: 12,
+    },
+    sectionContent: {
+      paddingLeft: 24,
+    },
+    hourAvailable: {
+      padding: 12,
+      backgroundColor: '#3e3b47',
+      borderRadius: 10,
+      marginRight: 8,
+    },
+    hourSelected: {
+      padding: 12,
+      backgroundColor: '#ff9000',
+      borderRadius: 10,
+      marginRight: 8,
+    },
+    hour: {
+      padding: 12,
+      backgroundColor: '#3e3b47',
+      borderRadius: 10,
+      marginRight: 8,
+      opacity: 0.3,
+    },
+    hourText: {
+      color: '#f4ede8',
+      fontFamily: 'RobotoSlab-Regular',
+      fontSize: 16,
+    },
   });
 
   const route = useRoute();
   const { user } = useAuth();
   const { goBack } = useNavigation();
   const [providers, setProviders] = useState([]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [availability, setAvailability] = useState([]);
+  const [selectedHour, setSelectedHour] = useState(0);
   const routeParams = route.params;
 
   const [selectedProvider, setSelectedProvider] = useState(
@@ -106,12 +180,68 @@ const CreateAppointment = () => {
     });
   }, []);
 
+  useEffect(() => {
+    api
+      .get(`providers/${selectedProvider}/day-availability`, {
+        params: {
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
+          day: selectedDate.getDate(),
+        },
+      })
+      .then((response) => {
+        setAvailability(response.data);
+      });
+  }, [selectedDate, selectedProvider]);
+
   const navigateBack = useCallback(() => {
     goBack();
   }, [goBack]);
 
   const handleSelectProvider = useCallback((providerId) => {
     setSelectedProvider(providerId);
+  }, []);
+
+  const handleToggleDatePicker = useCallback(() => {
+    setShowDatePicker((state) => !state);
+  }, []);
+
+  const handleDateChange = useCallback((event, date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+
+    if (date) {
+      setSelectedDate(date);
+    }
+  }, []);
+
+  const morningAvailability = useMemo(() => {
+    return availability
+      .filter(({ hour }) => hour < 12)
+      .map(({ hour, available }) => {
+        return {
+          hour,
+          available,
+          hourFomatted: format(new Date().setHours(hour), 'HH:00'),
+        };
+      });
+  }, [availability]);
+
+  const afternoonAvailability = useMemo(() => {
+    return availability
+      .filter(({ hour }) => hour >= 12)
+      .map(({ hour, available }) => {
+        return {
+          hour,
+          available,
+          hourFomatted: format(new Date().setHours(hour), 'HH:00'),
+        };
+      });
+  }, [availability]);
+
+  const handleSelectHour = useCallback((hour) => {
+    setSelectedHour(hour);
   }, []);
 
   return (
@@ -126,52 +256,121 @@ const CreateAppointment = () => {
         <Image source={{ uri: user.avatar_url }} style={styles.userAvatar} />
       </View>
 
-      <View style={styles.providerListContainer}>
-        <FlatList
-          horizontal
-          style={styles.providerList}
-          data={providers}
-          keyExtractor={(provider) => provider.id}
-          renderItem={({ item: provider }) => {
-            return (
-              <RectButton
-                style={
-                  provider.id === selectedProvider
-                    ? styles.providerContainerSelected
-                    : styles.providerContainer
-                }
-                onPress={() => {
-                  handleSelectProvider(provider.id);
-                }}
-              >
-                <Image
-                  source={{ uri: provider.avatar_url }}
-                  style={styles.providerAvatar}
-                />
-                <Text
+      <ScrollView style={styles.content}>
+        <View style={styles.providerListContainer}>
+          <FlatList
+            horizontal
+            style={styles.providerList}
+            data={providers}
+            keyExtractor={(provider) => provider.id}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item: provider }) => {
+              return (
+                <RectButton
                   style={
                     provider.id === selectedProvider
-                      ? styles.providerNameSelected
-                      : styles.providerName
+                      ? styles.providerContainerSelected
+                      : styles.providerContainer
                   }
+                  onPress={() => {
+                    handleSelectProvider(provider.id);
+                  }}
                 >
-                  {provider.name}
-                </Text>
-              </RectButton>
-            );
-          }}
-        />
-      </View>
+                  <Image
+                    source={{ uri: provider.avatar_url }}
+                    style={styles.providerAvatar}
+                  />
+                  <Text
+                    style={
+                      provider.id === selectedProvider
+                        ? styles.providerNameSelected
+                        : styles.providerName
+                    }
+                  >
+                    {provider.name}
+                  </Text>
+                </RectButton>
+              );
+            }}
+          />
+        </View>
 
-      <View style={styles.calendar}>
-        <Text style={styles.calendarTitle}>Escolha a data</Text>
-        <DateTimePicker
-          mode="date"
-          display="inline"
-          textColor="#f4ede8"
-          value={new Date()}
-        />
-      </View>
+        <View style={styles.calendar}>
+          <Text style={styles.title}>Escolha a data</Text>
+
+          <RectButton
+            style={styles.openDatePickerButton}
+            onPress={handleToggleDatePicker}
+          >
+            <Text style={styles.openDatePickerText}>Selecionar outra data</Text>
+          </RectButton>
+
+          {showDatePicker && (
+            <DateTimePicker
+              display="spinner"
+              textColor="#f4ede8"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          )}
+        </View>
+
+        <View style={styles.Schedule}>
+          <Text style={styles.title}>Escolha o horário</Text>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Manhã</Text>
+
+            <ScrollView
+              style={styles.sectionContent}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              {morningAvailability.map(({ hourFomatted, hour, available }) => {
+                return (
+                  <RectButton
+                    style={available ? styles.hourAvailable : styles.hour}
+                    key={hourFomatted}
+                    onPress={() => {
+                      handleSelectHour();
+                    }}
+                    selected={selectedHour === hour}
+                  >
+                    <Text style={styles.hourText}>{hourFomatted}</Text>
+                  </RectButton>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Tarde</Text>
+
+            <ScrollView
+              style={styles.sectionContent}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              {afternoonAvailability.map(
+                ({ hourFomatted, hour, available }) => {
+                  return (
+                    <RectButton
+                      style={available ? styles.hourAvailable : styles.hour}
+                      key={hourFomatted}
+                      onPress={() => {
+                        handleSelectHour();
+                      }}
+                      selected={selectedHour === hour}
+                    >
+                      <Text style={styles.hourText}>{hourFomatted}</Text>
+                    </RectButton>
+                  );
+                }
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
