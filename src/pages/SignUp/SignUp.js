@@ -1,67 +1,31 @@
 import React, { useRef, useCallback } from 'react';
 import {
-  View,
   Image,
-  Text,
-  TouchableOpacity,
+  View,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Alert,
-  StyleSheet,
 } from 'react-native';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
-import { useNavigation } from '@react-navigation/native';
-import getValidationErrors from '../utils/getValidationErrors';
-import api from '../services/api';
+import api from '../../services/api';
 
-import Button from '../components/Button';
-import Input from '../components/Input';
+import getValidationErrors from '../../utils/getValidationErrors';
 
-import logoImg from '../assets/logo.png';
+import Input from '../../components/Input/Input';
+import Button from '../../components/Button/Button';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 30,
-    paddingRight: 30,
-  },
-  title: {
-    fontSize: 24,
-    color: '#f4ede8',
-    fontFamily: 'RobotoSlab-Medium',
-    marginTop: 64,
-    marginBottom: 24,
-  },
-  form: {
-    alignSelf: 'stretch',
-  },
-  BackToSignIn: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#312e38',
-    borderTopWidth: 1,
-    borderColor: '#232129',
-    paddingBottom: getBottomSpace(),
-    paddingTop: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  BackToSignInText: {
-    color: '#fff',
-    fontSize: 18,
-    fontFamily: 'RobotoSlab-Regular',
-    marginLeft: 16,
-  },
-});
+import logoImg from '../../assets/logo.png';
+
+import {
+  Container,
+  Title,
+  BackToSignInButton,
+  BackToSignInText,
+} from './styles';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -126,14 +90,14 @@ const SignUp = () => {
           keyboardShouldPersistTap="handled"
           contentContainerStyle={{ flex: 1 }}
         >
-          <View style={styles.container}>
+          <Container>
             <Image source={logoImg} />
 
             <View>
-              <Text style={styles.title}>Crie sua conta</Text>
+              <Title>Crie sua conta</Title>
             </View>
 
-            <Form style={styles.form} ref={formRef} onSubmit={handleSignUp}>
+            <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
                 autoCapitalize="words"
                 name="name"
@@ -179,18 +143,17 @@ const SignUp = () => {
                 Cadastrar
               </Button>
             </Form>
-          </View>
+          </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      <TouchableOpacity
-        style={styles.BackToSignIn}
+      <BackToSignInButton
         onPress={() => {
           navigation.goBack();
         }}
       >
         <Icon name="arrow-left" size={20} color="#fff" />
-        <Text style={styles.BackToSignInText}>Voltar para login</Text>
-      </TouchableOpacity>
+        <BackToSignInText>Voltar para login</BackToSignInText>
+      </BackToSignInButton>
     </>
   );
 };

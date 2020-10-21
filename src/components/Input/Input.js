@@ -1,54 +1,14 @@
 import React, {
   useState,
-  useRef,
-  useCallback,
   useEffect,
+  useRef,
   useImperativeHandle,
   forwardRef,
+  useCallback,
 } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 import { useField } from '@unform/core';
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    alignSelf: 'stretch',
-    height: 60,
-    paddingLeft: 16,
-    paddingRight: 16,
-    backgroundColor: '#232129',
-    borderRadius: 10,
-    marginBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputContainerSelected: {
-    alignSelf: 'stretch',
-    height: 60,
-    paddingLeft: 16,
-    paddingRight: 16,
-    backgroundColor: '#232129',
-    borderRadius: 10,
-    marginBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#ff9000',
-    borderWidth: 2,
-  },
-  input: {
-    flex: 1,
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: 'RobotoSlab-Regular',
-  },
-  icon: {
-    marginRight: 16,
-  },
-  iconError: {
-    marginRight: 16,
-    color: '#c53030',
-  },
-});
+import { Container, TextInput, Icon } from './styles';
 
 const Input = ({ name, icon, ...rest }, ref) => {
   const inputElementRef = useRef(null);
@@ -84,18 +44,13 @@ const Input = ({ name, icon, ...rest }, ref) => {
   }, []);
 
   return (
-    <View
-      style={isFocused ? styles.inputContainerSelected : styles.inputContainer}
-    >
-      <Icon
-        style={error ? styles.iconError : styles.icon}
-        name={icon}
-        size={20}
-        color={isFilled ? '#ff9000' : '#666360'}
-      />
+    // <Container
+    //   style={isFocused ? styles.inputContainerSelected : styles.inputContainer}
+    // >
+    <Container isFocused={isFocused} isErrored={!!error}>
+      <Icon name={icon} size={20} color={isFilled ? '#ff9000' : '#666360'} />
 
       <TextInput
-        style={styles.input}
         keyboardAppearance="dark"
         placeholderTextColor="#666360"
         onFocus={handleInputFocus}
@@ -107,7 +62,7 @@ const Input = ({ name, icon, ...rest }, ref) => {
         }}
         {...rest}
       />
-    </View>
+    </Container>
   );
 };
 

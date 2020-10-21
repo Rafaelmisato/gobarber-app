@@ -136,25 +136,30 @@ const CreateAppointment = () => {
     },
     hourAvailable: {
       padding: 12,
-      backgroundColor: '#3e3b47',
       borderRadius: 10,
       marginRight: 8,
+      backgroundColor: '#3e3b47',
     },
     hourSelected: {
-      padding: 12,
       backgroundColor: '#ff9000',
+      padding: 12,
       borderRadius: 10,
       marginRight: 8,
     },
     hour: {
       padding: 12,
-      backgroundColor: '#3e3b47',
       borderRadius: 10,
       marginRight: 8,
+      backgroundColor: '#3e3b47',
       opacity: 0.3,
     },
     hourText: {
       color: '#f4ede8',
+      fontFamily: 'RobotoSlab-Regular',
+      fontSize: 16,
+    },
+    hourTextAvailable: {
+      color: 'black',
       fontFamily: 'RobotoSlab-Regular',
       fontSize: 16,
     },
@@ -355,12 +360,12 @@ const CreateAppointment = () => {
                 ({ hourFomatted, hour, available }) => {
                   return (
                     <RectButton
+                      selected={selectedHour === hour}
                       style={available ? styles.hourAvailable : styles.hour}
                       key={hourFomatted}
                       onPress={() => {
                         handleSelectHour();
                       }}
-                      selected={selectedHour === hour}
                     >
                       <Text style={styles.hourText}>{hourFomatted}</Text>
                     </RectButton>
