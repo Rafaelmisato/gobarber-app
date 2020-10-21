@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import Profile from '../pages/Profile';
 import CreateAppointment from '../pages/CreateAppointment/CreateAppointment';
-import AppointmentCreated from '../pages/AppointmentCreated';
+import AppointmentCreated from '../pages/AppointmentCreated/AppointmentCreated';
 
 const App = createStackNavigator();
 
