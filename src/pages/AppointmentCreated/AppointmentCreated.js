@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   Container,
   Title,
@@ -12,6 +14,9 @@ import {
 
 const AppointmentCreated = () => {
   const { reset } = useNavigation();
+  const { params } = useRoute();
+
+  const routeParams = params;
 
   const handleOkPressed = useCallback(() => {
     reset({
@@ -20,12 +25,20 @@ const AppointmentCreated = () => {
     });
   }, [reset]);
 
+  const formattedDate = useMemo(() => {
+    return format(
+      routeParams.date,
+      "EEEE', dia' dd 'de' MMMM 'de' yyyy 'às' HH:mm'h'",
+      { locale: ptBR }
+    );
+  }, [routeParams.date]);
+
   return (
     <Container>
       <Icon name="check" size={80} color="#04d361" />
 
       <Title>Agendamento Concluído</Title>
-      <Description>Terça, dia 14 de novembro de 2020 às 12:00</Description>
+      <Description>{formattedDate}</Description>
 
       <OkButton onPress={handleOkPressed}>
         <OkButtonText>Ok</OkButtonText>

@@ -23,7 +23,7 @@ import {
 } from './styles';
 
 const Dashboard = () => {
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
   const { navigate } = useNavigation();
   const [providers, setProviders] = useState([]);
 
@@ -34,9 +34,8 @@ const Dashboard = () => {
   }, []);
 
   const navigationToProfile = useCallback(() => {
-    // navigate('Profile');
-    signOut();
-  }, [signOut]);
+    navigate('Profile');
+  }, [navigate]);
 
   const navigateToCreateAppointment = useCallback(
     (providerId) => {
